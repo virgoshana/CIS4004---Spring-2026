@@ -1,101 +1,98 @@
-var counter = 0;
+function showFilter() {
 
-function tickUp() {
-    counter = counter + 1;
-    document.getElementById("counter").innerHTML = counter;
-}
+    var filterForm = document.getElementById("filterContent");
 
-function tickDown() {
-    counter = counter - 1;
-    document.getElementById("counter").innerHTML = counter;
-}
-
-function runForLoop() {
-
-    var text = "";
-    for (var i = 0; i <= counter; i++) {
-        text = text + i + " ";
+    if (filterForm.style.display === "none") {
+        filterForm.style.display = "block";
+    } else {
+        filterForm.style.display = "none";
     }
-    document.getElementById("forLoopResult").innerHTML = text;
 }
 
-function showOddNumbers() {
+function showAddNew() {
 
-    var text = "";
-    var i = 1;
+    var newForm = document.getElementById("newContent");
 
-    while (i <= counter) {
+    if (newForm.style.display === "none" || newForm.style.display === "") {
+        newForm.style.display = "flex";
+    } else {
+        newForm.style.display = "none";
+    }
+}
 
-        if (i % 2 == 1) {
-            text = text + i + " ";
+function filterArticles() {
+
+    var opinionChecked = document.getElementById("opinionCheckbox").checked;
+    var recipeChecked = document.getElementById("recipeCheckbox").checked;
+    var updateChecked = document.getElementById("updateCheckbox").checked;
+
+    var articles = document.getElementById("articleList").getElementsByTagName("article");
+
+    for (var i = 0; i < articles.length; i++) {
+
+        if (articles[i].className === "opinion") {
+            if (opinionChecked) {
+                articles[i].style.display = "block";
+            } else {
+                articles[i].style.display = "none";
+            }
         }
-        i = i + 1;
-    }
 
-    document.getElementById("oddNumberResult").innerHTML = text;
-}
+        if (articles[i].className === "recipe") {
+            if (recipeChecked) {
+                articles[i].style.display = "block";
+            } else {
+                articles[i].style.display = "none";
+            }
+        }
 
-function addMultiplesToArray() {
-
-    var arr = [];
-
-    for (var i = counter; i >= 5; i--) {
-
-        if (i % 5 == 0) {
-            arr.push(i);
+        if (articles[i].className === "update") {
+            if (updateChecked) {
+                articles[i].style.display = "block";
+            } else {
+                articles[i].style.display = "none";
+            }
         }
     }
-    console.log(arr);
 }
 
-function printCarObject() {
+function addNewArticle() {
 
-    var type = document.getElementById("carType").value;
-    var mpg = document.getElementById("carMPG").value;
-    var color = document.getElementById("carColor").value;
+    var title = document.getElementById("inputHeader").value;
+    var text = document.getElementById("inputArticle").value;
 
-    var car = {
-        cType: type,
-        cMPG: mpg,
-        cColor: color
-    };
+    var type = "";
+    var markerText = "";
 
-    console.log(car);
-}
-
-function loadCar(num) {
-
-    var car;
-
-    if (num == 1) {
-        car = carObject1;
+    if (document.getElementById("opinionRadio").checked) {
+        type = "opinion";
+        markerText = "Opinion";
     }
 
-    if (num == 2) {
-        car = carObject2;
+    if (document.getElementById("recipeRadio").checked) {
+        type = "recipe";
+        markerText = "Recipe";
     }
 
-    if (num == 3) {
-        car = carObject3;
+    if (document.getElementById("lifeRadio").checked) {
+        type = "update";
+        markerText = "Update";
     }
 
-    document.getElementById("carType").value = car.cType;
-    document.getElementById("carMPG").value = car.cMPG;
-    document.getElementById("carColor").value = car.cColor;
-}
-
-function changeColor(num) {
-    var p = document.getElementById("styleParagraph");
-
-    if (num == 1) {
-        p.style.color = "red";
+    if (title === "" || text === "" || type === "") {
+        alert("Please fill out all fields.");
+        return;
     }
 
-    if (num == 2) {
-        p.style.color = "green";
-    }
+    var newArticle = document.createElement("article");
+    newArticle.className = type;
 
-    if (num == 3) {
-        p.style.color = "blue";
-    }
+    newArticle.innerHTML =
+        "<span class='marker'>" + markerText + "</span>" +
+        "<h2>" + title + "</h2>" +
+        "<p>" + text + "</p>" +
+        "<p><a href='moreDetails.html'>Read more...</a></p>";
+
+    document.getElementById("articleList").appendChild(newArticle);
+    document.getElementById("newContent").reset();
 }
