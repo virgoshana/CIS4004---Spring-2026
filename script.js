@@ -1,98 +1,90 @@
-function showFilter() {
+document.addEventListener('DOMContentLoaded', () => {
+  const findBtn = document.getElementById('findBtn');
+  const addToTeamBtn = document.getElementById('addToTeamBtn');
+  const teamContainer = document.getElementById('teamContainer');
 
-    var filterForm = document.getElementById("filterContent");
+  const pokemonCache = {}; 
 
-    if (filterForm.style.display === "none") {
-        filterForm.style.display = "block";
-    } else {
-        filterForm.style.display = "none";
+  findBtn.addEventListener('click', async () => {
+    const input = document.getElementById('pokemonInput').value.trim().toLowerCase();
+    if (!input) return alert('Please enter a Pokemon name or ID.');
+
+    try {
+      let data;
+      if (pokemonCache[input]) {
+        data = pokemonCache[input]; 
+      } else {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${input}`);
+        if (!response.ok) throw new Error('Pokemon not found');
+        data = await response.json();
+        pokemonCache[input] = data;
+      }
+
+    
+      const img = document.getElementById('pokemonImage');
+      img.src = data.sprites.front_default || '';
+      img.alt = data.name;
+
+      
+      const audio = document.getElementById('pokemonSound');
+      let cryName = data.name.toLowerCase().replace('.', '-').replace(' ', '-');
+      audio.src = `https://play.pokemonshowdown.com/audio/cries/${cryName}.mp3`;
+      audio.load();
+
+      
+      const moves = data.moves.slice(0, 20).map(m => m.move.name);
+      const selects = [
+        document.getElementById('move1'),
+        document.getElementById('move2'),
+        document.getElementById('move3'),
+        document.getElementById('move4')
+      ];
+      selects.forEach(select => {
+        select.innerHTML = '';
+        moves.forEach(move => {
+          const option = document.createElement('option');
+          option.value = move;
+          option.textContent = move;
+          select.appendChild(option);
+        });
+      });
+
+    } catch (error) {
+      alert(error.message);
     }
-}
+  });
 
-function showAddNew() {
+  addToTeamBtn.addEventListener('click', () => {
+    const name = document.getElementById('pokemonImage').alt;
+    const imageSrc = document.getElementById('pokemonImage').src;
+    const moves = [
+      document.getElementById('move1').value,
+      document.getElementById('move2').value,
+      document.getElementById('move3').value,
+      document.getElementById('move4').value
+    ];
 
-    var newForm = document.getElementById("newContent");
+    if (!name || !imageSrc) return;
 
-    if (newForm.style.display === "none" || newForm.style.display === "") {
-        newForm.style.display = "flex";
-    } else {
-        newForm.style.display = "none";
-    }
-}
+    const row = document.createElement('tr');
+    const imgCell = document.createElement('td');
+    const movesCell = document.createElement('td');
 
-function filterArticles() {
+    const imgEl = document.createElement('img');
+    imgEl.src = imageSrc;
+    imgEl.alt = name;
+    imgCell.appendChild(imgEl);
 
-    var opinionChecked = document.getElementById("opinionCheckbox").checked;
-    var recipeChecked = document.getElementById("recipeCheckbox").checked;
-    var updateChecked = document.getElementById("updateCheckbox").checked;
+    const ul = document.createElement('ul');
+    moves.forEach(m => {
+      const li = document.createElement('li');
+      li.textContent = m;
+      ul.appendChild(li);
+    });
+    movesCell.appendChild(ul);
 
-    var articles = document.getElementById("articleList").getElementsByTagName("article");
-
-    for (var i = 0; i < articles.length; i++) {
-
-        if (articles[i].className === "opinion") {
-            if (opinionChecked) {
-                articles[i].style.display = "block";
-            } else {
-                articles[i].style.display = "none";
-            }
-        }
-
-        if (articles[i].className === "recipe") {
-            if (recipeChecked) {
-                articles[i].style.display = "block";
-            } else {
-                articles[i].style.display = "none";
-            }
-        }
-
-        if (articles[i].className === "update") {
-            if (updateChecked) {
-                articles[i].style.display = "block";
-            } else {
-                articles[i].style.display = "none";
-            }
-        }
-    }
-}
-
-function addNewArticle() {
-
-    var title = document.getElementById("inputHeader").value;
-    var text = document.getElementById("inputArticle").value;
-
-    var type = "";
-    var markerText = "";
-
-    if (document.getElementById("opinionRadio").checked) {
-        type = "opinion";
-        markerText = "Opinion";
-    }
-
-    if (document.getElementById("recipeRadio").checked) {
-        type = "recipe";
-        markerText = "Recipe";
-    }
-
-    if (document.getElementById("lifeRadio").checked) {
-        type = "update";
-        markerText = "Update";
-    }
-
-    if (title === "" || text === "" || type === "") {
-        alert("Please fill out all fields.");
-        return;
-    }
-
-    var newArticle = document.createElement("article");
-    newArticle.className = type;
-
-    newArticle.innerHTML =
-        "<span class='marker'>" + markerText + "</span>" +
-        "<h2>" + title + "</h2>" +
-        "<p>" + text + "</p>" +
-        "<p><a href='moreDetails.html'>Read more...</a></p>";
-
-    document.getElementById("articleList").appendChild(newArticle);
-    document.getElementById("newContent").reset();
-}
+    row.appendChild(imgCell);
+    row.appendChild(movesCell);
+    teamContainer.appendChild(row);
+  });
+});

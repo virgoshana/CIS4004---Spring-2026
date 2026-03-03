@@ -1,0 +1,92 @@
+body {
+  background-color: #add8e6;
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+#appContainer {
+  background-color: white;
+  border: 4px solid #d4a017;
+  border-radius: 30px;
+  padding: 20px 30px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+#inputRow {
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+  padding: 5px;
+  width: 200px;
+  font-size: 16px;
+}
+
+button {
+  padding: 5px 12px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+#pokemonImage {
+  display: block;
+  margin: 0 auto 10px;
+  width: 150px;
+  height: 150px;
+}
+
+audio {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.movesRow {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+select {
+  width: 48%;
+  padding: 5px;
+  font-size: 14px;
+}
+
+#addToTeamBtn {
+  margin: 15px 0;
+  width: 120px;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid black;
+  padding: 8px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+td img {
+  width: 60px;
+  height: 60px;
+}
+
+ul {
+  margin: 0;
+  padding-left: 20px;
+  text-align: left;
+}
